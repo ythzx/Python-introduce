@@ -1,0 +1,700 @@
+Python学习
+1 Python的优势和劣势
+GIL 保证线程安全，Python解释器对字节码的执行，单线程运行的速度是更快的
+科学计算中耗费CPU的使用C/C++
+Python2 和Python3 的GIL是不同的
+2 Python OR 其他技术的使用在公司内是一种"政治正确"
+3 web开发 爬虫 运维开发devops 桌面应用TKinter wxPython PyQt等
+4 Python2 or 和Python3
+    新的项目使用Python3开发
+    学会写兼容Python2和Python3的代码
+5 学习Python的不同阶段
+    自学 从整体上把握
+    使用Python工作
+    代码评审和给开源项目贡献代码 
+    看更多的书和博客
+    读/贡献标准库 优秀开源项目的源代码 > 可以多次看，带着问题看
+
+6 Python安装
+Ubuntu中的安装在使用源码安装的时候需要先安装依赖
+./configure && make && sudo make install 
+之后执行软连接 ln -s /usr/local/bin/Python /usr/bin/Python
+ln -s /usr/local/bin/pip /usr/bin/pip
+
+7 Python交互式环境
+REPL read-eavl-print-loop 读入 求值 打印 循环
+IDLE
+推荐使用IPython：
+    能保存之前的输入
+    查看函数 使用? ?? 两个问号会更详细
+    !+系统命令
+
+8 简单数据类型
+
+字符串:
+    ''/""/""""""
+    字符串的拼接使用join 不要使用s += a 这种会引起内存赋值 垃圾回收，效率低
+
+    字符串的方法：
+        spilit()
+        strip()
+        replace()
+        lower()/upper()
+        partition()
+        join()
+        '{}'.format()
+
+整型:
+    运算 + - * /
+浮点型:
+    精度要求高的计算使用decimal  from decimal import Decimal
+    python2中的除法,分子或分母为浮点数
+    使用from __future__ import division
+
+使用dir查看类型的方法：
+    dir('')
+    dir([])
+
+Bool类型
+    BOOL为False的：
+    None
+    ''
+    []
+    {}
+    ()
+    0
+    0.0
+    False
+
+9 变量和关键字
+    Python3:
+        In [21]: import keyword
+        In [22]: ', '.join(keyword.kwlist)
+        Out[22]: 'False, None, True, and, as, assert, break, class, continue, def, del, elif, else, except, finally, for, from, global, if, import, in, is, lambda, nonlocal, not, or, pass, raise, return, try, while, with, yield'
+
+    Python2:(其中print是关键字)
+        'and, as, assert, break, class, continue, def, del, elif, else, except, exec, finally, for, from, global, if, import, in, is, lambda, not, or, pass, print, raise, return, try, while, with, yield'
+
+    https://www.programiz.com/python-programming/keyword-list
+
+
+10 列表
+
+数据结构，计算机中存储组织数据的方式
+数据结构是指相互之间存在一种或多种特定关系的数据元素的集合
+
+序列是Python中基本的数据结构，序列中每个元素被分配一个序号，就是元素的位置，称为索引
+
+列表增加元素:
+    append() # 在末尾添加一个
+    extend([1,2]) # 添加多个元素
+
+列表修改元素:
+    list[0] = 'aa'
+    list[1:2]  通过切片方式
+    insert(index, value) 通过索引添加
+
+
+    通过inedex() 查看，没有的元素会抛出异常
+    通过in 查看是否存在某一元素
+    切片
+
+列表的删除:
+    del list[index]  明确知道索引,没有改索引会抛出异常
+    pop() 从尾部删除
+    list.pop(index) 弹出指定索引
+    list.remove(value) 删除后会抛出异常
+
+搜索元素:
+    list.index(0)  没有改索引会抛出异常
+    1 in list  推荐使用，返回Bool
+
+排序:
+    list.sort() # list方法会修改本身
+    sorted(list) # sorted函数会对list排序并生成新的list
+    list(reversed(l)) # reversed函数会对list反转并生成新的list
+    l.reverse() # 会修改列表本身
+
+    
+
+延伸阅读:
+https://developers.google.com/edu/python/sorting
+https://developers.google.com/edu/python/lists
+
+
+11 元组
+元组和列表的最大不同是元组不能修改
+创建元组耗费的时间小于列表
+    { python-web } tmp » python -m timeit '["fee", "fie", "fo", "fum"]'                               
+    1000000 loops, best of 3: 0.279 usec per loop
+    { python-web } tmp » python -m timeit '("fee", "fie", "fo", "fum")'                               
+    100000000 loops, best of 3: 0.0175 usec per loop
+
+元组赋值问题:
+    元组中存在列表的时候，对元组中的列表修改会成功。原因是变量赋值采用对象引用的方式，传递的是对象的内存地址
+    
+    >>> tup = (1, 2, [3,4])
+    >>> tup
+    (1, 2, [3, 4])
+    >>> tup[2] += [5,6]  # 有两步操作：1 列表的赋值成功 2 元组的赋值失败
+    Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    TypeError: 'tuple' object does not support item assignment
+    >>> tup
+    (1, 2, [3, 4, 5, 6])
+
+tup = (1,) 注意最后添加逗号
+
+
+元组中的元素不能删除
+元组可以拼接: 
+    >>> tup = (1,2,) + (3,4,)
+元组的index count:
+    tup.index(value)  会返回元素的索引值
+    tup.index(1,0,5) 可以执行范围，后面的两个参数是开始范围~结束范围
+    tup.count(value)  查找元素的个数
+
+延伸阅读:
+https://docs.python.org/3/library/timeit.html
+http://t.cn/RnvaZ6j
+
+
+12 字典
+
+dict具有映射关系
+
+Python2中字典为了查找速度，元素没有顺序，可以使用OrderedDict,Python3中的字典是有顺序的
+    Python2:
+    >>> dc = dict()
+    >>> dc['a'] = 1
+    >>> dc['b'] = 2
+    >>> dc['c'] = 3
+    >>> dc
+    {'a': 1, 'c': 3, 'b': 2}
+    Python3:
+    {'a': 1, 'b': 2, 'c': 3}
+
+    python2使用OrderedDict:
+    >>>from collections import OrderedDict
+    >>> dct = OrderedDict(a=1)
+    >>> dct['b'] = 2
+    >>> dct['c'] = 3
+    >>> dct
+    OrderedDict([('a', 1), ('b', 2), ('c', 3)])
+
+
+字典查找:
+    dc['a'] # 没有元素会报错
+    dc.get('a', '') # 推荐使用get,并添加默认值
+    a in dict 返回Bool
+
+字典删除:
+    del dc['a']  # 删除存在的元素
+字典更新:
+    >>> dc.update(a=11,b=12, f=13)  # 存在则更新，不存在则新增
+    >>> dc
+    {'a': 11, 'c': 3, 'b': 12, 'f': 13}
+
+使用元组作为key的应用(某个商品有大类a、小类c的时候): 
+    1 dct['{}_{}'.format('a', 'c')] = 'T'  # 每次需要拼接
+    2 dct = {
+    'a': {'c': 'T', 'd': 'N'}  # 嵌套需要查2次
+    }
+    3 dct[('a', 'c')] = 'T'
+
+keys() values() items()
+    >>> dct.keys()
+    ['a', 'b', 'c']
+    >>> dct.items()
+    [('a', 1), ('b', 2), ('c', 3)]
+    >>> dct.values
+    <bound method OrderedDict.values of OrderedDict([('a', 1), ('b', 2), ('c', 3)])>
+    >>> dct.values()
+    [1, 2, 3]
+
+Python2中iterkeys itervalues iteritems
+在Python3中已经不兼容
+
+延伸阅读:
+https://docs.python.org/2/library/collections.html#collections.OrderedDict
+https://developers.google.com/edu/python/dict-files
+
+13 集合
+
+集合初始化 a  = set()
+
+集合对列表去重:
+lst = [1,2,3,1]
+tmp = list(set(lst))
+
+set增加、删除元素:
+a.add(1)
+a.update([1,2,3])  # 有则更新
+a.remove() # 删除不存的元素会抛出异常
+a.discard() # 删除不存的元素不会抛出异常
+
+子集、父集:
+issubset()  
+>>> set([1]).issubset(set([1,2]))
+True
+
+issuperset()
+>>> set([1,2,3,4]).issuperset(set([1,2]))
+True
+
+集合的交集、并集、差集
+交集: &
+并集: |
+差集: -
+
+>>> s1 = set([1,2,3])
+>>> s2 = set([3,4,5])
+>>> s1 & s2
+set([3])
+>>> s1 | s2
+set([1, 2, 3, 4, 5])
+>>> s1 - s2
+set([1, 2])
+>>> s2 - s1
+set([4, 5])
+
+不变集合frozenset:
+>>> f = frozenset([1,2,3])
+>>> f
+frozenset([1, 2, 3])
+>>> f.add(4)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'frozenset' object has no attribute 'add'
+
+
+清空集合:
+s.clear()
+
+
+延伸阅读:
+https://www.geeksforgeeks.org/sets-in-python/
+
+
+14 控制流
+    for循环
+    if elif else
+    while 
+    range(0,5,step) # 第三个参数是步长
+    break
+    continue
+    pass
+
+延伸阅读:
+https://docs.python.org/3/tutorial/controlflow.html
+
+
+15 函数
+
+形参 实参:
+    def fun(形参)
+    func(实参)
+
+实参类型:
+    1 位置参数
+
+    2 关键字参数
+    强制关键字参数Python3:
+    def recv(maxsize, *, block): # 后面的block 必须通过关键字传参
+    'Receives a message'
+    pass
+
+    recv(1024, True) # TypeError
+    recv(1024, block=True) # Ok
+
+    3 混合参数
+        位置参数、关键字参数、可变长位置参数(*args)、可变长关键字参数(**kwargs)
+        *args -> 会将额外的参数收集为元组
+        **kwargs -> 会将额外的参数收集为字典
+
+函数作用域Scope(LEGB):
+    L: Local本地作用域
+    E: enclosing 嵌套作用域
+    G: global 全局作用域
+    B: build-in系统变量
+
+    系统变量:
+    Python3:
+        import builtins
+        dir(builtins)
+        >>> ', '.join((i for i in dir(builtins) if i.islower() and '_' not in i))
+        'abs, all, any, ascii, bin, bool, bytearray, bytes, callable, chr, classmethod, compile, complex, copyright, credits, delattr, dict, dir, divmod, enumerate, eval, exec, exit, filter, float, format, frozenset, getattr, globals, hasattr, hash, help, hex, id, input, int, isinstance, issubclass, iter, len, license, list, locals, map, max, memoryview, min, next, object, oct, open, ord, pow, print, property, quit, range, repr, reversed, round, set, setattr, slice, sorted, staticmethod, str, sum, super, tuple, type, vars, zip'
+    Pyhton2:
+    >>> import __builtin__
+    >>> dir(__builtin__)
+
+    嵌套作用域:
+        g = 0
+        def run():
+            g = 2  # run2 优先查找此处
+            def run2():
+                print(g)
+            return run2  # 一个函数返回内嵌函数
+
+        f = run()
+        f()
+
+    闭包:
+        闭包是延伸了作用域的函数，
+        其中包含函数定义体中引用，但是不在
+        定义体中定义的非全局变量，它能
+        访问定义体之外定义的非全局变量
+        # maker 可以认为是工厂函数
+        def maker(n):
+            def action(m):
+                return m*n
+            return action
+
+        f = maker(2)
+        res = f(10)
+
+        global关键字: 修改全局变量
+        nonlocal关键字: 修改嵌套作用域中的变量
+
+匿名函数:
+    lambda n:n+1  # n 是参数 n+1 是返回值
+    
+    ```
+    l = [[2, 4], [1, 1], [9, 3]]
+    sorted(l, key=lambda x:x[1])
+    ```
+
+    list(zip(*zip(a, b)))  # 相当于还原
+    [(1, 2, 3), (4, 5, 6)]
+
+高阶函数:
+    map(func, iterable) # python2 返回列表 Python3返回迭代器
+    filter(function, iterable) 
+    reduce(function, iterable[, initializer]) # 累计进行操作 可以設置初始值
+
+    ```
+    list(filter(None, [1, '', {}, (), False, None, set()]))
+    
+    from functools import reduce
+    rs = reduce(add, l1)
+    ```
+
+常用函数:
+    zip()
+    sum()
+
+
+开发中的陷阱:
+    可变默认参数
+    
+    def append(element, to=None):  # before def append(element, to=[])
+    if to is None:
+        to = []
+    to.append(element)
+    return to
+
+    闭包变量绑定
+    ```
+    def create_mult():
+        return [lambda x:i*x for i in range(5)]
+
+    for i in create_mult():
+        print(i(2))
+    8
+    8
+    8
+    8
+    8
+    ```
+    # 最后打印的都是8
+    解决方案：
+        函数默认值
+        def create_mult():
+            return [lambda x,i=i:i*x for i in range(5)]  # 每次将i作为参数传入
+        偏函数
+
+        from functools import partial
+        from operator import mul
+
+        def create_mult():
+            return [partial(mul, i) for i in range(5)]
+
+    延伸阅读
+    1. https://www.learnpython.org/en/Functions
+    2. http://book.pythontips.com/en/latest/map_filter.html
+    3. https://docs.python.org/3/library/functools.html
+
+
+16 模块 包
+
+模块的导入(起到隔离命名空间的作用):
+    import xx.py
+    from xx import xx.py
+    不建议使用from xx import *
+    1 不好跟踪
+    2 导入的变量没有被用到，提倡按需导入
+    3 污染命名空间
+
+import 工作原理：
+    第一次导入模块需要三个步骤
+    1. 搜索并找到模块文件
+    2. 在必要时(pyc不是最新的时候)把模块文件编译成字节码
+    3. 执行模块的代码来创建所定义的对象
+    
+    模块的搜素路径顺序:
+        程序主目录
+        Python环境变量
+        标准库
+        .pth文件
+
+    以上的路径保存在sys.path中
+
+    搜素文件类型:
+    python不仅仅从py文件中查找:
+    1 a.py源文件
+    2 a.pyc 字节码文件,当字节码文件的时间戳小于源文件的时候会重新生成
+    3 目录a作为包导入
+    4 a.so/a.dll/a.pyd 等编译扩展的文件
+    5 用C编译好的模块
+    6 zip文件包 easy_install
+
+python2:
+    在py文件的目录下生成pyc文件
+Python3:
+    在py文件的目录下生成__pycache__,在其中存储pyc, 命名规则 xx.cpyton-3.6.pyc
+
+
+模块包:
+    包中需要存在__init__.py
+
+
+__name__ __main__:
+模块被运行的时候，模块的名字为__main__,被导入则为模块的名字
+
+
+
+17 正则表达式
+
+re.match()
+re.search()
+有返回对象则查找到，没有返回则没有查找到
+
+match/search区别:
+    match 从开头匹配
+    search 从全部文本匹配
+
+标志位:
+    用于编译
+
+预编译:
+    re.compile()
+
+元字符:
+    .
+    \d
+    \w
+    \s
+    大写的是反意思
+
+贪婪匹配和非贪婪匹配(懒惰):
+    *?
+    +?
+
+
+分组:
+    group()
+
+
+18 文件处理
+
+模式:
+    读 r
+    写 w
+    追加 a
+    二进制 rb/wb/ab 
+
+读文件:
+    f = open(file, 'r')   # 创建文件对象,需要保证文件存在
+    f.readlines()
+    f.read()
+
+写文件:
+    f = open(file, 'w')
+    f.writelines(['a\n','b'])  # 写入多个对象 需要手动添加换行
+    f.write()
+
+
+with上下文:
+    # 使用try解决读写文件出现异常,保证关闭文件对象
+    try:
+        f = open(file, 'w')
+        f.write()
+    finally:
+        f.close()
+    
+    # 自动关闭文件对象
+    with open(file,'r') as f:
+        f.read()
+
+对象序列化:
+    json 转换成字符串
+    pickle  准换成二进制 Python特有的
+
+
+延伸阅读:
+高级编程
+http://dongweiming.github.io/Expert-Python/#23
+
+
+
+19 错误和异常
+
+异常分主动抛出异常和被动异常
+
+try-except
+
+try-except-else # 没有异常会执行else
+
+try-except-else-finally  # finally 总会执行
+
+自定义异常:
+    Exception # 可修改
+    Err # 不可修复异常
+
+
+延伸阅读:
+https://docs.python.org/3/tutorial/errors.html
+
+20 调试
+
+调试方法:
+    print
+    pdb
+    ipython
+    IDE
+
+ipython -i err.py --pdb --no-banner
+
+j num
+c 继续
+q 退出
+
+
+21 条件运算符、递归和推导
+
+条件运算符:
+    <条件表达式1>? <条件表达式2>:<条件表达式3>
+
+    i if xx else yy
+
+
+递归:
+    1 必定存在可使递归调用停止的条件,否则将导致出现无限递归
+    2 在每次调用自己时,在某种意义上更接近于解
+    能反复调用自身
+    Python中设置递归深度
+
+推导:
+    列表推导、字典推导
+    [i for i in [1,2,3]]  # 列表推导在处理大的数据的时候效率更高
+
+
+22 面向对象OOP
+
+属性
+
+方法
+
+__init__
+
+__new__
+
+类属性 
+
+静态方法
+
+MRO 方法解析顺序:
+python2经典类深度优先,这样会导致在查找的时候先查找到基类,基类通常是定义的初始化的内容
+python3默认是新式类,广度优先
+
+23 函数式编程
+
+函数式编程的优点:
+
+函数式编程的缺点:
+    效率低，可能会产生中间变量
+
+
+应用:
+    递归
+    柯里化 针对函数的多个参数
+    偏函数 partial
+
+24 装饰器
+
+装饰器是一种语法糖，类似于面向切片AOP，在指定的函数 类的位置添加代码
+
+函数装饰器:
+
+类装饰器
+
+带参数的装饰器，里面有两层
+
+
+25 常用内建模块
+
+os
+os.path
+os.getcwd()
+os.getdir()
+
+
+sys
+sys.path
+
+csv
+
+logging
+
+26. 包管理和虚拟环境
+
+easy_install：
+    只支持安装，不支持卸载，查看已安装的包的列表
+    采用的egg的安装方式，不再流行
+pip:
+
+虚拟环境virtualenv
+
+autoenv 设置自动切换虚拟环境
+
+venv:
+    python3下的
+
+pipenv:
+    更高级的虚拟环境管理，主要问题是速度慢，项目逐渐在烂尾
+
+pyenv：
+    Python版本管理，不推荐，不被官方认可
+
+
+27. 常用第三方包
+
+requests 对比 urllib2
+click 命令行工具
+argopt
+mkdoc
+
+28. 使用IPython
+
+配置alias别名
+配置日志格式，保存当前会话，退出后能打开之前的会话
+将当前内容输出到文件，还能从文件导入
+设置autoreload 不用退出ipython 实时更新代码，便于调试
+
+
+29. 迭代器、生成器和协程
+
+可迭代对象: 只要定义了可返回迭代器的__iter__方法，或者支持下标索引的__getitem__ 方法，那么就是一个可迭代对象
+
+迭代器:
+    实现__iter__ 和 next方法
