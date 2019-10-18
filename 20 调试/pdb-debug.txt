@@ -1,0 +1,113 @@
+(Pdb) c
+---------------------------------------------------------------------------
+ZeroDivisionError                         Traceback (most recent call last)
+~\Desktop\Python-introduce\20 调试\err.py in <module>
+     10
+     11 if __name__ == "__main__":
+---> 12     main()
+
+~\Desktop\Python-introduce\20 调试\err.py in main(aa, bb)
+      7
+      8 def main(aa=1, bb=0):
+----> 9     return div(aa,bb)
+     10
+     11 if __name__ == "__main__":
+
+~\Desktop\Python-introduce\20 调试\err.py in div(aa, bb)
+      4 def div(aa,bb):
+      5     pdb.set_trace()
+----> 6     return aa / bb
+      7
+      8 def main(aa=1, bb=0):
+
+ZeroDivisionError: division by zero
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(6)div()
+      4 def div(aa,bb):
+      5     pdb.set_trace()
+----> 6     return aa / bb
+      7 
+      8 def main(aa=1, bb=0):
+
+ipdb> q
+
+In [1]: quit()
+PS C:\Users\admin\Desktop\Python-introduce\20 调试> python -m pdb .\err.py
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(2)<module>()
+-> import pdb
+(Pdb) help
+
+Documented commands (type help <topic>):
+========================================
+EOF    bt         cont      enable  jump  pp       run      unt
+a      c          continue  exit    l     q        s        until
+alias  cl         d         h       list  quit     step     up
+args   clear      debug     help    n     r        tbreak   w
+b      commands   disable   ignore  next  restart  u        whatis
+break  condition  down      j       p     return   unalias  where
+
+Miscellaneous help topics:
+==========================
+exec  pdb
+
+Undocumented commands:
+======================
+retval  rv
+
+(Pdb) n
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(4)<module>()
+-> def div(aa,bb):
+(Pdb) n
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(8)<module>()
+-> def main(aa=1, bb=0):
+(Pdb) n
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(11)<module>()
+-> if __name__ == "__main__":
+(Pdb) n
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(12)<module>()
+-> main()
+(Pdb) n
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(6)div()
+-> return aa / bb
+(Pdb) list
+  1     # conding: utf-8
+  2     import pdb
+  3
+  4     def div(aa,bb):
+  5         pdb.set_trace()
+  6  ->     return aa / bb
+  7
+  8     def main(aa=1, bb=0):
+  9         return div(aa,bb)
+ 10
+ 11     if __name__ == "__main__":
+(Pdb) j 5
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(5)div()
+-> pdb.set_trace()
+(Pdb) c
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(6)div()
+-> return aa / bb
+(Pdb) c
+Traceback (most recent call last):
+  File "C:\Python27\lib\pdb.py", line 1314, in main
+    pdb._runscript(mainpyfile)
+  File "C:\Python27\lib\pdb.py", line 1233, in _runscript
+    self.run(statement)
+  File "C:\Python27\lib\bdb.py", line 400, in run
+    exec cmd in globals, locals
+  File "<string>", line 1, in <module>
+  File ".\err.py", line 12, in <module>
+    main()
+  File ".\err.py", line 9, in main
+    return div(aa,bb)
+  File ".\err.py", line 6, in div
+    return aa / bb
+ZeroDivisionError: integer division or modulo by zero
+Uncaught exception. Entering post mortem debugging
+Running 'cont' or 'step' will restart the program
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(6)div()
+-> return aa / bb
+(Pdb) c
+Post mortem debugger finished. The .\err.py will be restarted
+> c:\users\admin\desktop\python-introduce\20 调试\err.py(2)<module>()
+-> import pdb
+(Pdb)
