@@ -29,4 +29,22 @@ print(res)
 subject.update_title('new title')
 res1 = subject.show_title()
 res2 = subject.title
-print(res1, res2)
+# print(res1, res2)
+
+# 覆盖
+class Movie(Subject):
+    kind = 'movie'
+
+    def __init__(self, id, category_id, title, directors = []):
+        super.__init__(id, category_id, title)
+        self.directors = directors
+    
+    def show_directors(self):
+        return self.directors
+    
+    def show_title(self):
+        return f'Movie: {self.title}'  # 多态 
+
+# MRO 方法解析顺序 Methord Resolution Order
+
+
