@@ -91,3 +91,62 @@ inspect.getmro(D)
 # Out[6]: (__main__.D, __main__.B, __main__.C, __main__.A, object)
 
 # 深度优先会查找到基类，基类中的方法通常是占位用的
+
+# property
+
+class Movies(Subject):
+    kind = 'movie'
+
+    def __init__(self, id, category_id, title, directors = []):
+        super().__init__(id, category_id, title)
+        self._directors = directors
+
+    @property
+    def directors(self):
+        return self._directors
+
+# 设置setter delter
+
+class Movies1(Subject):
+    kind = 'movie'
+
+    def __init__(self, id, category_id, title, directors = []):
+        super().__init__(id, category_id, title)
+        self._directors = directors
+
+    @property
+    def directors(self):
+        return self._directors
+
+    @directors.setter   # 给directors 添加setter方法
+    def directors(self, value):
+        if not isinstance(value, list):
+            raise ValueError('invalid value')
+        self._directors = value
+    
+    @directors.deleter
+    def directors(self):
+        self._directors = []
+
+
+# 其他方式实现
+class Movies2(Subject):
+    kind = 'movie'
+
+    def __init__(self, id, category_id, title, directors = []):
+        super().__init__(id, category_id, title)
+        self._directors = directors
+
+    def get_directors(self):
+        return self._directors
+    
+    def set_directors(self, value):
+        if not isinstance(value, list):
+            raise ValueError('invalid type')
+        self._directors = value
+
+    def del_directors(self):
+        self._directors = []
+    
+    # 不设置具体的set/del方法 使用None占位
+    directors = property(get_directors, set_directors, del_directors)
