@@ -150,3 +150,33 @@ class Movies2(Subject):
     
     # 不设置具体的set/del方法 使用None占位
     directors = property(get_directors, set_directors, del_directors)
+
+
+# 静态方法/类方法
+
+class A(object):
+    count = 0
+
+    def incr_count(self):
+        self.count += 1
+    
+    @classmethod
+    def incr_count2(cls):
+        cls.count += 1
+     
+    @staticmethod
+    def incr_count3():
+        A.count += 1  # 访问了类的变量，不建议使用
+    
+    @staticmethod
+    def avg(*items): 
+        return sum(items) / len(items)
+
+# 静态方法和类方法都访问不到对象变量，因为没有self
+
+# 私有变量
+class Employee:
+    _kind = 'employee'
+
+    def __init__(self, name):
+        self.__name = name
