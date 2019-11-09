@@ -180,3 +180,63 @@ class Employee:
 
     def __init__(self, name):
         self.__name = name
+
+#  e._Employee__name
+
+# 构造方法
+# 构造方法主要在创建对象时初始化对象
+# __new__ cls
+# __init__
+
+class ExampleClass:
+    def __new__(cls, *args, **kwargs):
+        print("Creating new instance")
+        instance = super().__new__(cls)
+        instance.PAYLOAD = (args, kwargs)
+        return instance
+    
+    def __init__(self, payload):
+        print("Initing instance")
+        self.payload =   payload
+
+# 小节:
+# __new__ 是类方法 __init__是实例方法
+# __new__ 先执行
+
+
+# 控制属性访问(拦截)
+# __getattr__
+# __setattr__
+# __delattr__
+# __getattribute__
+
+class User:
+    ...  # ==pass in python3
+
+class Proxy:
+    title = "Proxy"
+    _data = User()
+
+    def show_title(self):
+        return self.title
+    
+    def __getattr__(self, name):
+        print("user __getattr__")
+        return getattr(self._data, name)
+    
+    def __setattr__(self, name, value):
+        print("user __setattr__")
+        return object.__setattr__(self._data, name, value)
+
+    def __delattr__(self, name):
+        print("user __delattr__")
+        return object.__delattr__(self._data, name)
+
+    def __getattribute__(self, name):
+        if name in ('_data', 'title', 'show_title'):
+            return object.__getattribute__(self, name)  # 使用object 而不是self 防止陷入无限循环
+        print(f"use __getattribute__ :{name}")
+        if name.statswith('b'):
+            raise AttributeError
+        return object.__getattribute__(self._data, name)
+
