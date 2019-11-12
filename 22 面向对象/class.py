@@ -240,3 +240,68 @@ class Proxy:
             raise AttributeError
         return object.__getattribute__(self._data, name)
 
+
+# 类的表示
+class MyClass:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+    
+    def __repr__(self):
+        return f'{self.__class__.__name__} (id={self.id}) (name={self.name})'
+
+    def __str__(self):
+        return f'{self.__class__.__name__} (id={self.id}) '
+
+"""  
+In [140]: cls = MyClass(1,'aa')
+
+In [141]: cls
+Out[141]: <__main__.MyClass at 0x21b056c7d30>
+
+添加repr
+In [155]: print(cls)
+MyClass (id=1) (name=aa)
+
+In [156]: repr(cls)
+Out[156]: 'MyClass (id=1) (name=aa)'
+
+In [157]: str(cls)
+Out[157]: 'MyClass (id=1) (name=aa)'
+"""
+
+# 容器方法
+# __getitem__
+# __setitem__
+# __delitem__
+# __len__
+
+# 设计一种字典通过点调用的方式
+
+class AttrDict:
+    def __init__(self, **kwargs):
+        self.__dict__.update(**kwargs)
+    
+    def __getitem__(self, key):
+        return self.__getattribute__(key)
+    
+    def __setitem__(self, key, value):
+        self.__setattr__(key, value)
+    
+    def __delitem__(self, key):
+        self.__delattr__(key)
+    
+    def __len__(self):
+        return len(self.__dict__)
+    
+
+# 最好的atrdict实现
+
+class attrdict(dict):
+    def __init__(self, *args, **kwargs):
+        dict.__init__(self, *args, **kwargs)
+        self.__dict__ = self
+
+
+
+
