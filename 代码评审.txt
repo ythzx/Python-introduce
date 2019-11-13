@@ -1,0 +1,7 @@
+https://github.com/google/eng-practices
+
+代码评审
+
+参考豆瓣的规范
+
+提交的PR至少有一个人评审
