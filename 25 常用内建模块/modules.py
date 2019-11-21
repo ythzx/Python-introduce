@@ -35,4 +35,3 @@ os.path.basename(p) # 获取指定路径文件名字
 os.path.dirname(p) # 获取指定文件路径名字
 
 os.path.exists(p) # 判断文件或者路径是否存在
-
