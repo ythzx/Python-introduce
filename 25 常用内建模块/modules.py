@@ -134,3 +134,51 @@ for i in range(5):
 print(f'{random.sample(range(10), 3)}', end='\t')
 print(f'{random.choices(range(10), k=3)}', end='\t')
 
+
+# logging
+
+import logging
+
+"""
+日志级别: value
+------------
+CRITICAL: int 70
+FATAL: int 60 
+ERROR: int 50 
+WARNING: int 40 
+WARN: int 30 
+INFO: int 20 
+DEBUG: int 10 
+NOTSET: int 0 
+"""
+
+# stream
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger('test1 loggger')
+logger.info("this is info")
+
+logger = logging.getLogger('LGESL')
+logger.setLevel(level=logging.INFO)
+
+
+# file
+
+logging.basicConfig(filename='test.log', level=logging.INFO)
+logging.info('started')
+logging.info(logging.root.handlers)
+
+# ipython 中使用logging file 的方案
+
+logging.root.setLevel(logging.INFO)
+
+# 最佳使用logging的方案
+import logging
+
+logger = logging.getLogger()
+handler = logging.StreamHandler()
+formatter = logging.Formatter(
+    '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
+)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
