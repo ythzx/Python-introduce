@@ -84,3 +84,53 @@ with open('test.csv', 'rt') as f:
 
 import datetime
 
+now = datetime.datetime.now()
+
+now.month, now.day, now.hour
+
+today = datetime.datetime.today()
+
+today.year, today.day
+
+dl = datetime.date()
+
+# datetime.timedelta(seconds =1)
+# Out[144]: datetime.timedelta(0, 1)
+
+# In [145]: datetime.timedelta(minutes=1)
+# Out[145]: datetime.timedelta(0, 60)
+
+# In [146]: datetime.timedelta(hours=1)
+# Out[146]: datetime.timedelta(0, 3600)
+
+# In [147]: datetime.timedelta(days=1)
+# Out[147]: datetime.timedelta(1)
+
+# In [148]: datetime.timedelta(weeks=1)
+# Out[148]: datetime.timedelta(7)
+
+# 格式化
+
+dt_format = "%Y-%m-%d %H:%M:%S"
+s = datetime.datetime.now().strftime(dt_format)
+
+s = '2019-11-23 22:35:24'
+
+d = datetime.datetime.strptime(s, dt_format)
+
+# random 
+for i in range(5):
+    print(f'{random.random():.4f}', end='\t')
+    print(f'{random.unifrom(50, 60):.4f}', end='\t')
+    print(f'{random.randint(1, 100):.4f}', end='\t')  # 整数范围
+
+for i in range(5):
+    print(f'{random.randrange(0,101,1):.4f}', end='\t')
+
+for i in range(5):
+    print(f'{random.randrange(0,101,1):.4f}', end='\t')
+
+
+print(f'{random.sample(range(10), 3)}', end='\t')
+print(f'{random.choices(range(10), k=3)}', end='\t')
+
