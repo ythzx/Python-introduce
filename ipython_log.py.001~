@@ -1,0 +1,8 @@
+# IPython log file
+
+get_ipython().run_line_magic('logstart', '')
+less ipython_log.py
+cat ipython_log.py
+a = 1
+b = 2
+get_ipython().run_line_magic('logoff', '')

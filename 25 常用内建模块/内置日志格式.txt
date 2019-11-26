@@ -1,0 +1,18 @@
+内置日志格式
+
+%(name)s 生成日志的Logger名称。
+%(levelno)s 数字形式的日志级别，包括DEBUG, INFO, WARNING, ERROR和CRITICAL。
+%(levelname)s 文本形式的日志级别，包括’DEBUG’、 ‘INFO’、 ‘WARNING’、 ‘ERROR’ 和’CRITICAL’。
+%(pathname)s 输出该日志的语句所在源文件的完整路径（如果可用）。
+%(filename)s 文件名。
+%(module)s 输出该日志的语句所在的模块名。
+%(funcName)s 调用日志输出函数的函数名。
+%(lineno)d 调用日志输出函数的语句所在的代码行（如果可用）。
+%(created)f 日志被创建的时间，UNIX标准时间格式，表示从1970-1-1 00:00:00 UTC计算起的秒数。
+%(relativeCreated)d 日志被创建时间与日志模块被加载时间的时间差，单位为毫秒。
+%(asctime)s 日志创建时间。默认格式是 “2003-07-08 16:49:45,896”，逗号后为毫秒数。
+%(msecs)d 毫秒级别的日志创建时间。
+%(thread)d 线程ID（如果可用）。
+%(threadName)s 线程名称（如果可用）。
+%(process)d 进程ID（如果可用）。
+%(message)s 日志信息。
