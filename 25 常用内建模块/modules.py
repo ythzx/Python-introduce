@@ -44,7 +44,7 @@ sys.getrefcount() # 引用计数
 sys.getsizeof() # 占用的字节数
 
 for obj in ({}, [], (), 'string', 1, 12.3):
-    print(obj.__class__.__name__, sys.getsizeof(d))
+    print(obj.__class__.__name__, sys.getsizeof(obj))
 
 # dict 64   
 # list 64   
