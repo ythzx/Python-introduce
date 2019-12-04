@@ -46,6 +46,7 @@ t.start()
 d.join()
 t.join()
 
+# 多线程编程中多个线程会同时访问同一资源的
 # 同步机制
 
 # 信号量
@@ -54,9 +55,13 @@ import time
 from random import random 
 from threading import Thread, Semaphore
 
-sema = Semaphore(3)
+sema = Semaphore(3)  # 限制同时访问的数量
 
 def foo(tid):
+    """
+    acquire 计数器-1
+    release 计数器+1
+    """
     with sema:
         print(f'{tid} acquire sema')
         wt = random() * 2
@@ -71,7 +76,82 @@ for i in range(5):
 for t in threads:
     t.join()
 
-# Lock
+"""
+# 保证同时只有3个被访问
+0 acquire sema
+1 acquire sema
+2 acquire sema
+
+1 release sema
+3 acquire sema
+2 release sema
+4 acquire sema
+3 release sema
+4 release sema
+0 release sema
+"""
+
+# Lock(互斥锁) == 信号量为1 同时只有一个资源访问
+# 加锁会牺牲一定的性能
+import time
+from threading import Thread
+
+value = 0
+
+def get_lock():
+    """
+    不加锁
+    """
+    global value
+    new = value + 1
+    time.sleep(0.001) # sleep 让线程有机会切换
+    value = new
+
+threads = []
+
+for i in range(100):
+    t = Thread(target=get_lock)
+    t.start()
+    threads.append(t)
+
+for t in threads:
+    t.join()
+
+print(value) # 结果并不是100 有执行慢的线程最后把结果重写了
+
+
+
+import time
+from threading import Thread, Lock
+
+value = 0
+lock = Lock()
+
+def get_lock():
+    """
+    加锁
+    """
+    global value
+    with lock:
+        """"
+        同时只有一个资源能被访问
+        """"
+        new = value + 1
+        time.sleep(0.001) # sleep 让线程有机会切换
+        value = new
+
+threads = []
+
+for i in range(100):
+    t = Thread(target=get_lock)
+    t.start()
+    threads.append(t)
+
+for t in threads:
+    t.join()
+
+print(value)
+
 
 # 可重入锁
 
