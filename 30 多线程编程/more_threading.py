@@ -132,10 +132,8 @@ def get_lock():
     加锁
     """
     global value
+    # 同时只有一个资源能被访问    
     with lock:
-        """"
-        同时只有一个资源能被访问
-        """"
         new = value + 1
         time.sleep(0.001) # sleep 让线程有机会切换
         value = new
@@ -153,12 +151,100 @@ for t in threads:
 print(value)
 
 
-# 可重入锁
+# 可重入锁RLock acquire方法能够不被阻塞的被一个线程调用多次
+# acquire 和 release 要相同的次数
 
-# 条件
-# 生产者 消费者
+import threading 
 
-# Event事件
+lock = threading.Lock()
+
+print('First try:', lock.acquire())
+# print('First try:', lock.release())
+print('Second try:', lock.acquire(0))  # 0 不等待
+
+lock = threading.RLock()
+
+# 使用RLock 能重新获得这个锁
+print('First try:', lock.acquire())
+print('Second try:', lock.acquire(0))
+
+
+# Condition条件 所有线程接收到后都会处理
+# 一个线程等待一个条件 另一个线程发出这个条件
+# 生产者 消费者模型
+
+import time
+import threading
+
+def consumer(cond):
+    t = threading.currentThread()
+    with cond:
+        cond.wait()  # 等待满足的条件
+        print(f'{t.name}: Resource is available to consume')
+    
+def producer(cond):
+    t = threading.currentThread()
+    with cond:
+        print(f'{t.name}: Making resource available')
+        cond.notifyAll()  # 唤醒消费者
+
+condition = threading.Condition()
+
+c1 = threading.Thread(name='c1', target=consumer, args=(condition,))
+c2 = threading.Thread(name='c2', target=consumer, args=(condition,))
+p = threading.Thread(name='p', target=producer, args=(condition,))
+
+# 先启动消费者 之后启动生产者
+c1.start()
+time.sleep(1)
+c2.start()
+time.sleep(1)
+p.start()
+
+# Event事件 只有一个线程去处理
+import time 
+import threading
+from random import randint
+
+def consumer(event, l):
+    t = threading.currentThread()
+    while 1:
+        event_is_set = event.wait(2)
+        if event_is_set:
+            try:
+                integer = l.pop()
+                print(f'{integer} poped from list by {t.name}')
+                event.clear()  # 重置条件状态
+            except IndexError: # 为了让刚启动容错
+                pass
+
+def producer(event, l):
+    t = threading.currentThread()
+    while 1:
+        integer = randint(10, 100)
+        l.append(integer)
+        print(f'{integer} append to list by {t.name}')
+        event.set()  # 设置条件
+        time.sleep(1)
+
+event = threading.Event()
+
+l = []
+
+threads = []
+
+for name in ('consumer1', 'consumer2'):
+    t = threading.Thread(name=name, target=consumer, args=(event, l))
+    t.start()
+    thread.append(t)
+
+p = threading.Thread(name='producer1', target=producer, args=(event, l))
+p.start()
+threads.append(p)
+
+for t in threads:
+    t.join()
+
 
 # 队列
 
