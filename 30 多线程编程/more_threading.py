@@ -201,7 +201,7 @@ c2.start()
 time.sleep(1)
 p.start()
 
-# Event事件 只有一个线程去处理
+# Event事件 只有一个线程去处理 谁接收谁处理
 import time 
 import threading
 from random import randint
@@ -236,7 +236,7 @@ threads = []
 for name in ('consumer1', 'consumer2'):
     t = threading.Thread(name=name, target=consumer, args=(event, l))
     t.start()
-    thread.append(t)
+    threads.append(t)
 
 p = threading.Thread(name='producer1', target=producer, args=(event, l))
 p.start()
@@ -245,12 +245,183 @@ threads.append(p)
 for t in threads:
     t.join()
 
+"""
+86 append to list by producer1
+86 poped from list by consumer2
+83 append to list by producer1
+83 poped from list by consumer2
+37 append to list by producer1
+37 poped from list by consumer2
+22 append to list by producer1
+22 poped from list by consumer2
+98 append to list by producer1
+98 poped from list by consumer1
+100 append to list by producer1
+100 poped from list by consumer2
+42 append to list by producer1
+42 poped from list by consumer1
+100 append to list by producer1
+100 poped from list by consumer1
+40 append to list by producer1
+40 poped from list by consumer2
+58 append to list by producer1
+58 poped from list by consumer2
+87 append to list by producer1
+87 poped from list by consumer2
+90 append to list by producer1
+90 poped from list by consumer2
+"""
 
-# 队列
 
-# 优先级队列
+# 队列 生产者向队列中添加 消费者从队列中获取
+# 1 put 向队列中添加对象
+# 2 get 从队列中删除并返回一个对象
+# 3 task_done 完成任务时调用
+# 4 join 阻塞 直到所有项目被处理
+
+import time
+import threading
+from random import random 
+from queue import Queue
+
+q = Queue()
+
+def double(n):
+    return n * 2
+
+def producer():
+    while 1:
+        wt = random()
+        time.sleep(wt)
+        q.put((double,wt))
+
+def consumer():
+    while 1:
+        task, arg = q.get()
+        print(f'task: {task}')
+        print(f'arg: {arg}')
+        print(arg, task(arg))
+        q.task_done()
+
+for target in(producer, consumer):
+    t = threading.Thread(target=target)
+    t.start()
+
+# 优先级队列PriortyQuery
+import time 
+import threading
+from random import randint
+from queue import PriorityQueue
+
+q = PriorityQueue()
+
+def double(n):
+    return n * 2
+
+def producer():
+    count = 0
+    while 1:
+        if count > 5:
+            break
+        pri = randint(0, 100)
+        print(f'put: {pri}')
+        q.put((pri, double, pri)) # 第一项是优先级 数字越小 优先级越高
+        count += 1
+
+def consumer():
+    while 1:
+        if q.empty():
+            break
+        pri, task, arg = q.get()
+        print(f'PRI: {pri} {arg} *2 = {task(arg)}')
+        time.sleep(0.1)
+
+t = threading.Thread(target=producer)
+t.start()
+time.sleep(1)
+t = threading.Thread(target=consumer)
+t.start()
+"""
+put: 37
+put: 56
+put: 39
+put: 23
+put: 45
+put: 40
+PRI: 23 23 *2 = 46
+PRI: 37 37 *2 = 74
+PRI: 39 39 *2 = 78
+PRI: 40 40 *2 = 80
+PRI: 45 45 *2 = 90
+PRI: 56 56 *2 = 112
+"""
 
 # 线程池
+# 手动实现线程池
+
+import time
+import threading
+from random import random
+from queue import Queue
+
+def doubel(n):
+    return n * 2
 
 
+class Worker(threading.Thread):
+    def __init__(self, queue):
+        super(Worker, self).__init__()
+        self._q = queue
+        self.daemon = True
+        self.start()
+    
+    def run(self):
+        while 1:
+            f, args, kwargs = self._q.get()
+            try:
+                print(f'USE: {self.name}')
+                print(f(*args, **kwargs))
+            except Exception as e:
+                print(e)
+            self._q.task_done()
+        
 
+class ThreadPool:
+    def __init__(self, num_t=5):
+        self._q = Queue(num_t)
+        for _ in range(num_t):
+            Worker(self._q)
+        
+    def add_task(self, f, *args, **kwargs):
+        self._q.put((f, args, kwargs))
+    
+    def wait_complete(self):
+        self._q.join()
+
+pool = ThreadPool()
+
+for _ in range(8):
+    wt = random()
+    pool.add_task(double, wt)
+    time.sleep(wt)
+
+pool.wait_complete()
+
+"""
+USE: Thread-202
+0.3289221727443976
+USE: Thread-203
+1.941427406228165
+USE: Thread-204
+1.4668008298757944
+USE: Thread-205
+0.23496561121950066
+USE: Thread-206
+1.8221948868451534
+USE: Thread-202
+1.4666381815129967
+USE: Thread-203
+1.3545860243223637
+USE: Thread-204
+1.68321523133081
+"""
