@@ -425,3 +425,9 @@ USE: Thread-203
 USE: Thread-204
 1.68321523133081
 """
+
+# 多进程包中的线程池
+from multiprocessing.pool import ThreadPool
+pool = ThreadPool(5)
+pool.map(lambda x: x**2, range(5))
+# [0, 1, 4, 9, 16]
